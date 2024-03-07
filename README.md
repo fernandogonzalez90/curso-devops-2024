@@ -9,3 +9,15 @@ Este proyecto es parte del curso de DevOps y tiene como objetivo proporcionar a 
 - Aprender a implementar integración continua (CI) y entrega continua (CD).
 - Practicar la infraestructura como código (IaC) y la gestión de la configuración.
 - Experimentar con monitoreo y solución de problemas en aplicaciones desplegadas.
+
+## Estructura del Repositorio
+
+- `python-app/`: Contiene el código fuente de la aplicación de ejemplo en Python.
+- `labs/kubernetes/`: Manifests de ejemplo de K8s.
+- `labs/terraform/`: Definiciones de infraestructura como código utilizando Terraform.
+
+## Requisitos Previos
+
+- Conocimiento básico de desarrollo de software y programación.
+- Conocimientos básicos de redes.
+- Experiencia básica en el uso de sistemas de control de versiones, como Git.
