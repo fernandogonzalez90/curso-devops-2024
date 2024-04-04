@@ -19,7 +19,12 @@ resource "aws_instance" "ec2" {
   instance_type = "t2.micro"
 }
 
+# resource "aws_iam_user" "user" {
+#   count = 3
+#   name  = "user-${count.index}"
+# }
+
 resource "aws_iam_user" "user" {
-  count = 3
-  name  = "user-${count.index}"
+  count = 2
+  name  = var.names[count.index]
 }
