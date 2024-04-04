@@ -62,7 +62,7 @@ resource "aws_instance" "instancia" {
   key_name = "terraform_ec2_key"
   associate_public_ip_address = true
   subnet_id = aws_subnet.subnet-1.id
-  security_groups = [aws_security_group.ssh.id]
+  vpc_security_group_ids = [aws_security_group.ssh.id]
 }
 
 #En este caso para facilidad, le decimos a Terraform que luego de crear el código nos devuelva la IP pública de la instancia para poder conectarnos 
