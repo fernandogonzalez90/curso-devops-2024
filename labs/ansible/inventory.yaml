@@ -2,6 +2,7 @@ webservers:
   hosts:
     host1:
       ansible_host: 44.203.180.99
+      ansible_user: ubuntu
     host2:
       ansible_host: 18.232.117.42
 
