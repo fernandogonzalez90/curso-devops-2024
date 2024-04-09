@@ -1,9 +1,14 @@
 - name: Play 1
   hosts: host1
   become: yes
+  vars:
+    server_to_ping: 8.8.8.8
   tasks:
     - name: Execute command 'date'
       command: date
+
+    - name: Execute ping
+      shell: "ping -c 4 {{ server_to_ping }} > /home/ubuntu/test.txt" 
     
     - name: Install apache 
       apt:
