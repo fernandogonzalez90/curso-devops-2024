@@ -16,4 +16,4 @@ RUN export FLASK_APP=app.py
 EXPOSE 5000
 
 #El comando ejecutado será python -m flask run --host 0.0.0.0, de esta forma podremos acceder de forma correcta al servicio
-CMD ["python", "-m", "flask", "run", "--host", "0.0.0.0"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
