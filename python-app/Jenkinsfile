@@ -1,0 +1,15 @@
+pipeline{
+    agent any
+
+    environment {
+        IMAGE_NAME = "asruiz1235/python-app"
+    }
+
+    stages{
+        stage('Build image') {
+            steps {
+                sh 'docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} ./python-app'
+            }
+        }
+    }
+}
