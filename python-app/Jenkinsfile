@@ -4,6 +4,7 @@ pipeline{
     environment {
         IMAGE_NAME = "asruiz1235/python-app"
         DOCKERHUB_CREDS = credentials("dockerhub")
+        NameContainer = "python-app"
     }
 
     stages{
@@ -20,17 +21,16 @@ pipeline{
             }
         }
 
-        // stage("Docker run"){
-        //     steps{
-        //         input message: 'Continue?'
-        //         sh """
-        //         if docker ps -a | grep -q ${env.NameContainer}; then 
-        //             docker stop ${env.NameContainer} && docker rm ${env.NameContainer}
-        //         fi
-        //         docker run -d --name ${env.NameContainer} -p 5000:5000 ${env.RepoDockerHub}/${env.NameContainer}:${env.BUILD_NUMBER}
-        //         """
-
-        //     }
-        // }
+        stage("Docker run"){
+            steps{
+                input message: 'Continue?'
+                sh """
+                if docker ps -a | grep -q ${env.NameContainer}; then 
+                    docker stop ${env.NameContainer} && docker rm ${env.NameContainer}
+                fi
+                docker run -d --name ${env.NameContainer} -p 5000:5000 ${IMAGE_NAME}:${BUILD_NUMBER}
+                """
+            }
+        }
     }
 }
