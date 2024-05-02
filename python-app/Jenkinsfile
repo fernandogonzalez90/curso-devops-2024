@@ -13,13 +13,19 @@ pipeline{
                 sh 'docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} ./python-app'
             }
         }
+            
+        // stage('Run Unit Test') {
+        //     steps {
+        //         sh 'cd python-app && pip install -r requirements.txt && python3 -m unittest test_app.py'
+        //     }
+        // }
 
         stage("Docker push"){
             steps{
                     sh 'echo ${DOCKERHUB_CREDS_PSW} | docker login -u ${DOCKERHUB_CREDS_USR} --password-stdin'
                     sh 'docker push ${IMAGE_NAME}:${BUILD_NUMBER}'
             }
-        }
+        }        
 
         stage("Docker run"){
             steps{
