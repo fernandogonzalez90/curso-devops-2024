@@ -1,0 +1,93 @@
+# Crea una ServiceAccount para Prometheus en el namespace default.
+# Las ServiceAccounts son utilizadas por los procesos dentro de los pods para interactuar con la API de Kubernetes.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: default 
+
+---
+
+# Define un ClusterRole con permisos para leer ciertos recursos de Kubernetes necesarios para la recolección de métricas.
+# Un ClusterRole es un conjunto de permisos que se pueden asignar a nivel del clúster, en lugar de un namespace específico.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - nodes/proxy
+  - nodes/metrics
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - extensions
+  - apps
+  resources:
+  - deployments
+  - replicasets
+  verbs: ["get", "list", "watch"]
+
+---
+
+# Asocia la ServiceAccount 'prometheus' con el ClusterRole 'prometheus', otorgando los permisos definidos en el ClusterRole a la ServiceAccount.
+# Esto permite que los pods que utilizan esta ServiceAccount puedan acceder a los recursos del clúster según lo definido.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+- kind: ServiceAccount
+  name: prometheus
+  namespace: default
+
+---
+
+# Define un StatefulSet para Prometheus con dos réplicas, asegurando alta disponibilidad.
+# StatefulSets son ideales para aplicaciones que requieren identidades persistentes y almacenamiento persistente.
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: "prometheus"
+      containers:
+      - name: prometheus
+        image: prom/prometheus:v2.30.0
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - name: prometheus-data
+          mountPath: /prometheus
+        - name: prometheus-config
+          mountPath: /etc/prometheus
+          readOnly: true
+      volumes:
+      - name: prometheus-config
+        configMap:
+          name: prometheus-config
+  volumeClaimTemplates:
+  - metadata:
+      name: prometheus-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 500Mi
