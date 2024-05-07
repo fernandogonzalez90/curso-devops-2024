@@ -9,3 +9,6 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-a
 
 # Creamos el cluster:
 minikube start --memory 2048
+
+# Borramos el cluster y lo creamos nuevamente especificando un CNI:
+minikube start --network-plugin=cni --cni=calico --memory=2048
