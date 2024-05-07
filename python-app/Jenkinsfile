@@ -27,17 +27,41 @@ pipeline{
             }
         }        
 
-        stage("Docker run"){
-            steps{
-                input message: 'Continue?'
-                sh """
-                if docker ps -a | grep -q ${env.NameContainer}; then 
-                    docker stop ${env.NameContainer} && docker rm ${env.NameContainer}
-                fi
-                docker run -d --name ${env.NameContainer} -p 5000:5000 ${IMAGE_NAME}:${BUILD_NUMBER}
-                """
+        // stage("Docker run"){
+        //     steps{
+        //         input message: 'Continue?'
+        //         sh """
+        //         if docker ps -a | grep -q ${env.NameContainer}; then 
+        //             docker stop ${env.NameContainer} && docker rm ${env.NameContainer}
+        //         fi
+        //         docker run -d --name ${env.NameContainer} -p 5000:5000 ${IMAGE_NAME}:${BUILD_NUMBER}
+        //         """
+        //     }
+        // }
+
+        stage("Update Deployment Manifest") {
+            steps {
+                script {
+                    // Construir el nombre de la imagen con el número de build
+                    def newImage = "${IMAGE_NAME}:${env.BUILD_NUMBER}"
+                    // Usar sed para actualizar el archivo de manifiesto
+                    sh "sed -i 's|IMAGE_PLACEHOLDER|${newImage}|' python-app/manifests/deployment.yaml"
+                    sh "cat python-app/manifests/deployment.yaml "
+                }
             }
         }
+
+        stage("Deploy in Kubernetes") {
+            steps {
+                input message: 'Continue?'
+                script {
+                    withCredentials([file(credentialsId: 'k8s2', variable: 'KUBECONFIG')]) {
+                        sh 'kubectl apply -f python-app/manifests/deployment.yaml'
+                    }
+                }
+            }
+        }
+
     }
     
     post {
