@@ -45,8 +45,8 @@ pipeline{
                     // Construir el nombre de la imagen con el número de build
                     def newImage = "${IMAGE_NAME}:${env.BUILD_NUMBER}"
                     // Usar sed para actualizar el archivo de manifiesto
-                    sh "sed -i 's|IMAGE_PLACEHOLDER|${newImage}|' python-app/manifests/deployment.yaml"
-                    sh "cat python-app/manifests/deployment.yaml "
+                    sh "sed -i 's|IMAGE_PLACEHOLDER|${newImage}|' python-app/manifests/manifest.yaml"
+                    sh "cat python-app/manifests/manifest.yaml "
                 }
             }
         }
@@ -56,7 +56,7 @@ pipeline{
                 input message: 'Continue?'
                 script {
                     withCredentials([file(credentialsId: 'k8s2', variable: 'KUBECONFIG')]) {
-                        sh 'kubectl apply -f python-app/manifests/deployment.yaml'
+                        sh 'kubectl apply -f python-app/manifests/manifest.yaml'
                     }
                 }
             }

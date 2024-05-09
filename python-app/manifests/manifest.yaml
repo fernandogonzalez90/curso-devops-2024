@@ -19,7 +19,7 @@ spec:
     - name: my-registry-key
     containers:
     - name: python-app
-      image: asruiz1235/python-app:10 
+      image: IMAGE_PLACEHOLDER 
       ports:
       - containerPort: 5000
       volumeMounts:
