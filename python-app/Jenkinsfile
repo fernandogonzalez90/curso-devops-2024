@@ -51,16 +51,16 @@ pipeline{
             }
         }
 
-        stage("Deploy in Kubernetes") {
-            steps {
-                input message: 'Continue?'
-                script {
-                    withCredentials([file(credentialsId: 'k8s2', variable: 'KUBECONFIG')]) {
-                        sh 'kubectl apply -f python-app/manifests/manifest.yaml'
-                    }
-                }
-            }
-        }
+        // stage("Deploy in Kubernetes") {
+        //     steps {
+        //         input message: 'Continue?'
+        //         script {
+        //             withCredentials([file(credentialsId: 'k8s2', variable: 'KUBECONFIG')]) {
+        //                 sh 'kubectl apply -f python-app/manifests/manifest.yaml'
+        //             }
+        //         }
+        //     }
+        // }
 
     }
     
