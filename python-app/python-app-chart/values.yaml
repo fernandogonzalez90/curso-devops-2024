@@ -13,7 +13,7 @@ image:
   repository: asruiz1235/python-app
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "10"
+  tag: "11"
 
 imagePullSecrets:
   - name: my-registry-key
